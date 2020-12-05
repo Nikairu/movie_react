@@ -48,7 +48,17 @@ export class MainView extends React.Component {
     return (
       <div className="main-view">
         {selectedMovie ? (
-          <MovieView movie={selectedMovie} />
+          <div>
+            <MovieView movie={selectedMovie} />
+            <button
+              className="back-button"
+              onClick={() => {
+                this.goBack();
+              }}
+            >
+              <span className="label">Back</span>
+            </button>
+          </div>
         ) : (
           movies.map((movie) => (
             <MovieCard
