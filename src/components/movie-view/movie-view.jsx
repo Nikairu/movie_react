@@ -7,10 +7,7 @@ export class MovieView extends React.Component {
   }
 
   render() {
-    const movie = this.props.movie.selectedMovie;
-    /* const goBack = this.props.movie.goback; */
-    console.log(this.props.movie);
-    console.log(this.props);
+    const movie = this.props.movie;
 
     if (!movie) return null;
 
@@ -37,11 +34,12 @@ export class MovieView extends React.Component {
         <button
           className="back-button"
           onClick={() => {
-            this.props.movie.goback();
+            this.props.goback();
           }}
         >
           <span className="label">Button</span>
         </button>
+        <button to={'/'}>"s s"</button>
       </div>
     );
   }

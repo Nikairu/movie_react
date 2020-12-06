@@ -48,22 +48,7 @@ export class MainView extends React.Component {
     return (
       <div className="main-view">
         {selectedMovie ? (
-          <div>
-            <MovieView
-              movie={{
-                selectedMovie: selectedMovie,
-                goback: this.goBack,
-              }}
-            />
-            {/* <button
-              className="back-button"
-              onClick={() => {
-                this.goBack();
-              }}
-            >
-              <span className="label">Back</span>
-            </button> */}
-          </div>
+          <MovieView movie={selectedMovie} goback={() => this.goBack()} />
         ) : (
           movies.map((movie) => (
             <MovieCard
