@@ -35,7 +35,7 @@ export class MainView extends React.Component {
   }
   goBack() {
     this.setState({
-      selectedMovie: '',
+      selectedMovie: null,
     });
   }
 
@@ -49,15 +49,20 @@ export class MainView extends React.Component {
       <div className="main-view">
         {selectedMovie ? (
           <div>
-            <MovieView movie={selectedMovie} />
-            <button
+            <MovieView
+              movie={{
+                selectedMovie: selectedMovie,
+                goback: this.goBack,
+              }}
+            />
+            {/* <button
               className="back-button"
               onClick={() => {
                 this.goBack();
               }}
             >
               <span className="label">Back</span>
-            </button>
+            </button> */}
           </div>
         ) : (
           movies.map((movie) => (

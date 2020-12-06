@@ -3,12 +3,14 @@ import React from 'react';
 export class MovieView extends React.Component {
   constructor() {
     super();
-
     this.state = {};
   }
 
   render() {
-    const { movie } = this.props;
+    const movie = this.props.movie.selectedMovie;
+    /* const goBack = this.props.movie.goback; */
+    console.log(this.props.movie);
+    console.log(this.props);
 
     if (!movie) return null;
 
@@ -32,6 +34,14 @@ export class MovieView extends React.Component {
           <span className="label">Director: </span>
           <span className="value">{movie.Director.Name}</span>
         </div>
+        <button
+          className="back-button"
+          onClick={() => {
+            this.props.movie.goback();
+          }}
+        >
+          <span className="label">Button</span>
+        </button>
       </div>
     );
   }
