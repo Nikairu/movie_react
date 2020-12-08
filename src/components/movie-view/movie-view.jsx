@@ -37,9 +37,8 @@ export class MovieView extends React.Component {
             this.props.goback();
           }}
         >
-          <span className="label">Button</span>
+          <span className="label">Back</span>
         </button>
-        <button to={'/'}>"s s"</button>
       </div>
     );
   }
