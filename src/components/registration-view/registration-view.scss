@@ -1,3 +1,10 @@
 .registration-form {
+  height: 100vh;
   padding: 0px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  align-items: auto;
+  align-content: center;
 }

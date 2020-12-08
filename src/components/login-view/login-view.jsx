@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
-
+import PropTypes from 'prop-types';
 import './login-view.scss';
 
 export function LoginView(props) {
@@ -40,7 +40,12 @@ export function LoginView(props) {
         />
       </Form.Group>
 
-      <Button variant="primary" type="submit" onClick={handleSubmit}>
+      <Button
+        className="login-button"
+        variant="primary"
+        type="submit"
+        onClick={handleSubmit}
+      >
         Login
       </Button>
 
@@ -50,3 +55,8 @@ export function LoginView(props) {
     </Form>
   );
 }
+
+LoginView.propTypes = {
+  onLoggedIn: PropTypes.func.isRequired,
+  startRegister: PropTypes.func.isRequired,
+};

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
-
-/* import './resgistration-view.scss'; */
+import PropTypes from 'prop-types';
+import './registration-view.scss';
 
 export function RegistrationView(props) {
   const [username, setUsername] = useState('');
@@ -72,3 +72,7 @@ export function RegistrationView(props) {
     </form>
   );
 }
+
+RegistrationView.propTypes = {
+  finishRegister: PropTypes.func.isRequired,
+};

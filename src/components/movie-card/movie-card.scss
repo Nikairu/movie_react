@@ -1,0 +1,26 @@
+.card-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  margin-bottom: 48px;
+}
+
+.card-img-top {
+  width: 100%;
+  height: 25vw;
+  object-fit: cover;
+}
+
+.card-title {
+  margin-bottom: 0.75rem;
+  min-height: 47px;
+  display: flex;
+  align-items: center;
+  height: 20%;
+}
+
+.more-button {
+  position: absolute;
+  bottom: 20px;
+}

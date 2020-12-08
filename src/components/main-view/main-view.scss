@@ -11,3 +11,12 @@
   flex: 0 1 auto;
   margin: 0px 20px;
 }
+
+.main-view {
+  max-width: 1350px;
+  padding-top: 30px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  gap: 7px 7px;
+}
