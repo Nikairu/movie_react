@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import './login-view.scss';
+
+import { Link } from 'react-router-dom';
 
 export function LoginView(props) {
   const [username, setUsername] = useState('');
@@ -9,13 +12,20 @@ export function LoginView(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(username, password);
-    /* Send a request to the server for authentication */
-    props.onLoggedIn(username);
-  };
-
-  const startRegister = (e) => {
-    props.startRegister();
+    axios
+      .post(
+        `https://nikairu-flix-app.herokuapp.com/login?Username=${encodeURIComponent(
+          username
+        )}&Password=${encodeURIComponent(password)}`
+      )
+      .then((response) => {
+        const data = response.data;
+        props.onLoggedIn(data);
+      })
+      .catch((e) => {
+        console.log(e);
+        console.log('no such user');
+      });
   };
 
   return (
@@ -33,7 +43,7 @@ export function LoginView(props) {
       <Form.Group controlId="formBasicPassword">
         <Form.Label>Password</Form.Label>
         <Form.Control
-          type="text"
+          type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -49,14 +59,18 @@ export function LoginView(props) {
         Login
       </Button>
 
-      <Button variant="primary" type="submit" onClick={startRegister}>
+      <Link to={`/register`}>
+        <Button className="login-button" variant="primary" type="submit">
+          Register
+        </Button>
+      </Link>
+      {/* <Button variant="primary" type="submit" onClick={startRegister}>
         Register
-      </Button>
+      </Button> */}
     </Form>
   );
 }
 
 LoginView.propTypes = {
   onLoggedIn: PropTypes.func.isRequired,
-  startRegister: PropTypes.func.isRequired,
 };

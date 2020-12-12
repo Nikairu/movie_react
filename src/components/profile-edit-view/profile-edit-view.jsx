@@ -1,50 +1,49 @@
 import React, { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
-import PropTypes from 'prop-types';
-import './registration-view.scss';
 import { BackButtonView } from '../back-button-view/back-button-view';
+import './profile-edit-view.scss';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { Form, Button } from 'react-bootstrap';
 
-export function RegistrationView(props) {
-  const history = useHistory();
+import { Link } from 'react-router-dom';
 
+export function ProfileEditView(props) {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [birthday, setBirthday] = useState('');
-  const [favoriteMovies, setFavoriteMovies] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const user = props.user;
+  const userToken = props.userToken;
 
-    console.log(`${username} ${email} ${password} ${birthday}`);
+  function applyChanges(e) {
+    e.preventDefault();
     axios
-      .post('https://nikairu-flix-app.herokuapp.com/users', {
-        Username: username,
-        Password: password,
-        Email: email,
-        Birthday: birthday,
-      })
+      .put(
+        `https://nikairu-flix-app.herokuapp.com/users/${user}`,
+        {
+          Username: username,
+          Password: password,
+          Email: email,
+          Birthday: birthday,
+        },
+        {
+          headers: { Authorization: `Bearer ${userToken}` },
+        }
+      )
       .then((response) => {
-        const data = response.data;
-        console.log(data);
-        window.open('/', '_self'); // the second argument '_self' is necessary so that the page will open in the current tab
+        console.log(response);
+        window.open('/', '_self');
       })
       .catch((e) => {
-        console.log('error registering the user');
+        console.log(e);
+        console.log('Failed to update data');
       });
-  };
-
-  const cancelRegistration = () => {
-    history.push('/');
-  };
+  }
 
   return (
-    <form className="registration-form">
-      <BackButtonView cancel={cancelRegistration} />
+    <form className="profile-edit-form">
       <Form.Group controlId="formBasicUsername">
-        <Form.Label>Username</Form.Label>
+        <Form.Label>New Username</Form.Label>
         <Form.Control
           type="text"
           placeholder="Enter username"
@@ -55,7 +54,7 @@ export function RegistrationView(props) {
       </Form.Group>
 
       <Form.Group controlId="formBasicEmail">
-        <Form.Label>Email</Form.Label>
+        <Form.Label>New Email</Form.Label>
         <Form.Control
           type="email"
           placeholder="Enter email"
@@ -78,7 +77,7 @@ export function RegistrationView(props) {
       </Form.Group>
 
       <Form.Group controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
+        <Form.Label>New Password</Form.Label>
         <Form.Control
           type="password"
           placeholder="Password"
@@ -87,8 +86,13 @@ export function RegistrationView(props) {
         />
       </Form.Group>
 
-      <Button variant="primary" type="submit" onClick={handleSubmit}>
-        Register
+      <Button
+        className="login-button"
+        variant="primary"
+        type="submit"
+        onClick={applyChanges}
+      >
+        Apply
       </Button>
     </form>
   );
