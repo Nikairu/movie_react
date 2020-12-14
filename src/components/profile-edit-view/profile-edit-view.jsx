@@ -4,8 +4,6 @@ import './profile-edit-view.scss';
 import axios from 'axios';
 import { Form, Button } from 'react-bootstrap';
 
-import { Link } from 'react-router-dom';
-
 export function ProfileEditView(props) {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');

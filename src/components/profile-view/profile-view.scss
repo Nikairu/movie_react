@@ -1,0 +1,38 @@
+button.remove-button {
+  padding-right: 7px;
+  padding-left: 7px;
+}
+
+.user-view {
+  margin-left: 20px;
+}
+
+.user-data-container {
+  display: flex;
+}
+
+.modal-content {
+  background-color: #343a40 !important;
+}
+
+.profile-edit-form {
+  margin-left: 15px;
+  border-left: solid;
+  padding-left: 15px;
+  border-left-width: 1px;
+}
+
+.edit-button {
+  margin-right: 7px;
+}
+
+.favorite-movies {
+  max-width: 1050px;
+  padding-top: 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 7px 7px;
+  .card-img-top {
+    max-height: 350px;
+  }
+}

@@ -19,8 +19,8 @@ export function LoginView(props) {
         )}&Password=${encodeURIComponent(password)}`
       )
       .then((response) => {
-        const data = response.data;
-        props.onLoggedIn(data);
+        const authData = response.data;
+        props.onLoggedIn(authData);
       })
       .catch((e) => {
         console.log(e);

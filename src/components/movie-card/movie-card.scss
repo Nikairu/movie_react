@@ -6,6 +6,10 @@
   margin-bottom: 48px;
 }
 
+.card-body {
+  padding-bottom: 13px;
+}
+
 .card-img-top {
   width: 100%;
   height: 25vw;
@@ -20,7 +24,25 @@
   height: 20%;
 }
 
+.button-wrapper {
+  height: 100%;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.main_div {
+  height: 100%;
+  width: 100%;
+  border-collapse: collapse;
+}
+
 .more-button {
-  position: absolute;
-  bottom: 20px;
+  margin-bottom: 7px;
+  margin-right: 7px;
+}
+
+.favorite-button {
+  margin-bottom: 7px;
+  right: 20px;
 }

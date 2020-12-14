@@ -8,34 +8,44 @@ import { Link } from 'react-router-dom';
 export class MovieView extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+
+    console.log(props);
+
+    let addFavorite = false;
+
+    if (props.addFavorite) {
+      addFavorite = true;
+    }
+
+    this.state = {
+      movie: this.props.movie,
+      username: this.props.user,
+      userToken: this.props.userToken,
+      movieid: this.props.movieId,
+      Favoritebutton: addFavorite,
+    };
   }
+  addFavorite = () => {
+    this.setState({
+      Favoritebutton: false,
+    });
+    axios({
+      method: 'post',
+      url: `https://nikairu-flix-app.herokuapp.com/users/${this.state.username}/Movies/${this.state.movieid}`,
+      headers: { Authorization: `Bearer ${this.state.userToken}` },
+      data: {},
+    })
+      .then((response) => {
+        console.log('movie added');
+      })
+      .catch((e) => {
+        console.log(e);
+        console.log('movie not added');
+      });
+  };
 
   render() {
-    const username = this.props.user;
-    const movieid = this.props.movie._id;
-    const movie = this.props.movie;
-    const userToken = this.props.userToken;
-
-    console.log(this.props.user);
-    console.log(this.props.movie._id);
-    console.log(this.props.userToken);
-    function addFavorite() {
-      axios
-        .post(
-          `https://nikairu-flix-app.herokuapp.com/users/${username}/Movies/${movieid}`,
-          {
-            headers: { Authorization: `Bearer ${userToken}` },
-          }
-        )
-        .then((response) => {
-          const data = response.data;
-        })
-        .catch((e) => {
-          console.log(e);
-          console.log('movie not added');
-        });
-    }
+    const movie = this.state.movie;
 
     if (!movie) return null;
 
@@ -58,14 +68,16 @@ export class MovieView extends React.Component {
           <Button variant="link">Genre</Button>
         </Link>
 
-        <Button
-          className="favorite-button"
-          variant="primary"
-          type="submit"
-          onClick={addFavorite}
-        >
-          Add to Favorites!
-        </Button>
+        {this.state.Favoritebutton && (
+          <Button
+            className="favorite-button"
+            variant="primary"
+            type="submit"
+            onClick={this.addFavorite}
+          >
+            Add to Favorites!
+          </Button>
+        )}
       </div>
     );
   }

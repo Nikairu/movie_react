@@ -28,25 +28,23 @@ export class MainView extends React.Component {
 
   componentDidMount() {
     let accessToken = localStorage.getItem('token');
+    let user = localStorage.getItem('user');
     if (accessToken !== null) {
       this.setState({
         user: localStorage.getItem('user'),
       });
-      console.log(localStorage);
-      this.getMovies(accessToken);
+      this.getUserData(accessToken, user);
     }
   }
 
-  onLoggedIn(authData) {
+  onLoggedIn = (authData) => {
     this.setState({
       user: authData.user.Username,
     });
-    console.log(authData.user);
-    localStorage.setItem('userData', authData.user);
     localStorage.setItem('token', authData.token);
     localStorage.setItem('user', authData.user.Username);
-    this.getMovies(authData.token);
-  }
+    this.getUserData(authData.token, authData.user.Username);
+  };
 
   getMovies(token) {
     axios
@@ -68,11 +66,37 @@ export class MainView extends React.Component {
       });
   }
 
+  getUserData(userToken, user) {
+    axios
+      .get(`https://nikairu-flix-app.herokuapp.com/user/${user}`, {
+        headers: { Authorization: `Bearer ${userToken}` },
+      })
+      .then((response) => {
+        let userData = response.data[0];
+        this.setState({
+          user: userData.Username,
+          userToken: userToken,
+          favoriteMovies: userData.FavoriteMovies,
+          email: userData.Email,
+          birthday: userData.Birthday,
+        });
+        this.getMovies(this.state.userToken);
+      })
+      .catch((e) => {
+        this.setState({});
+        console.log(e);
+        console.log('Error Authenticating');
+        localStorage.clear();
+      });
+  }
+
   render() {
     const { movies, user } = this.state;
-
     // Before the movies have been loaded
     if (!movies) return <div className="main-view" />;
+
+    if (movies.length < 1 && localStorage.getItem('user'))
+      return <div className="main-view" />;
 
     return (
       <Router>
@@ -88,7 +112,7 @@ export class MainView extends React.Component {
                   <div>
                     <h2 className="welcome-banner">Welcome to Myflix</h2>
                   </div>
-                  <LoginView onLoggedIn={(user) => this.onLoggedIn(user)} />
+                  <LoginView onLoggedIn={this.onLoggedIn} />
                 </div>
               );
 
@@ -96,25 +120,35 @@ export class MainView extends React.Component {
               <div className="main-view">
                 {movies.map((m) => (
                   <MovieCard
+                    user={user}
+                    userToken={this.state.userToken}
                     key={m._id}
                     movie={m}
-                    onClick={(movie) => {
-                      this.onMovieClick(movie);
-                    }}
+                    addFavorite={
+                      this.state.favoriteMovies.includes(m._id) ? false : true
+                    }
                   />
                 ))}
               </div>
             );
           }}
         />
+
         <Route path="/register" render={() => <RegistrationView />} />
+
         <Route
           path="/movies/:movieId"
           render={({ match }) => (
             <MovieView
               movie={movies.find((m) => m._id === match.params.movieId)}
+              movieId={match.params.movieId}
               user={user}
               userToken={localStorage.getItem('token')}
+              addFavorite={
+                this.state.favoriteMovies.includes(match.params.movieId)
+                  ? false
+                  : true
+              }
             />
           )}
         />
@@ -122,7 +156,6 @@ export class MainView extends React.Component {
         <Route
           path="/directors/:name"
           render={({ match }) => {
-            if (!movies) return <div className="main-view" />;
             return (
               <DirectorView
                 director={
@@ -159,17 +192,7 @@ export class MainView extends React.Component {
               <ProfileView
                 user={user}
                 userToken={localStorage.getItem('token')}
-              />
-            );
-          }}
-        />
-        <Route
-          path="/profile/edit"
-          render={() => {
-            return (
-              <ProfileEditView
-                user={user}
-                userToken={localStorage.getItem('token')}
+                movies={movies}
               />
             );
           }}

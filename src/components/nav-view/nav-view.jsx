@@ -1,8 +1,6 @@
 import React from 'react';
 import './nav-view.scss';
-import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import { Navbar, Nav, NavDropdown, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 export class NavView extends React.Component {
@@ -11,21 +9,23 @@ export class NavView extends React.Component {
     this.state = {};
   }
 
+  logout = () => {
+    localStorage.clear();
+    window.open('/', '_self');
+  };
+
   render() {
     const user = this.props.user;
 
     if (!user) return null;
     return (
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-        <Link className="navbar-brand" to={`/`}>
-          My-Flix
-        </Link>
+        <Navbar.Brand href="/">My-Flix</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="mr-auto">
             <Nav.Link href="#">Features</Nav.Link>
             <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-              <NavDropdown.Item href="#">Movies</NavDropdown.Item>
               <NavDropdown.Item href="#">Genres</NavDropdown.Item>
               <NavDropdown.Item href="#">Directors</NavDropdown.Item>
               <NavDropdown.Divider />
@@ -33,7 +33,18 @@ export class NavView extends React.Component {
             </NavDropdown>
           </Nav>
           <Nav>
-            <Link to={`/profile`}>User Profile</Link>
+            <Link className="profile-button btn btn-primary" to={`/profile`}>
+              Profile
+            </Link>
+          </Nav>
+          <Nav>
+            <Button
+              className="logout-button"
+              variant="outline-danger"
+              onClick={this.logout}
+            >
+              logout
+            </Button>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
