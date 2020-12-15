@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { BackButtonView } from '../back-button-view/back-button-view';
+import Fade from 'react-bootstrap/Fade';
 import './profile-edit-view.scss';
 import axios from 'axios';
 import { Form, Button } from 'react-bootstrap';
+import Alert from 'react-bootstrap/Alert';
 
 export function ProfileEditView(props) {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [birthday, setBirthday] = useState('');
   const [password, setPassword] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(false);
 
   const user = props.user;
   const userToken = props.userToken;
@@ -34,12 +37,21 @@ export function ProfileEditView(props) {
       })
       .catch((e) => {
         console.log(e);
-        console.log('Failed to update data');
+        setErrorMessage(e.response.data.errors[0].msg);
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 3000);
       });
   }
 
   return (
     <form className="profile-edit-form">
+      <Fade in={showAlert}>
+        <div className="alert-container">
+          <Alert variant="danger">{errorMessage}</Alert>
+        </div>
+      </Fade>
       <Form.Group controlId="formBasicUsername">
         <Form.Label>New Username</Form.Label>
         <Form.Control

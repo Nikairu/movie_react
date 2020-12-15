@@ -83,7 +83,7 @@ export function ProfileView(props) {
           <Modal.Title className="text-light">Accept Changes</Modal.Title>
         </Modal.Header>
         <Modal.Body className="text-light">
-          Are you sure you want to change your user data?
+          Are you sure you want to delete your user data?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="danger" onClick={deregister}>
@@ -132,7 +132,7 @@ export function ProfileView(props) {
             Delete account
           </Button>
         </div>
-        {edit && <ProfileEditView />}
+        {edit && <ProfileEditView user={username} userToken={userToken} />}
       </div>
 
       <div className="label">Favorite Movies: </div>

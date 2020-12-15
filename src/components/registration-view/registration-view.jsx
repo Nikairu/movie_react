@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import Alert from 'react-bootstrap/Alert';
+import Fade from 'react-bootstrap/Fade';
 import './registration-view.scss';
 import { BackButtonView } from '../back-button-view/back-button-view';
 import axios from 'axios';
@@ -14,11 +16,11 @@ export function RegistrationView(props) {
   const [birthday, setBirthday] = useState('');
   const [favoriteMovies, setFavoriteMovies] = useState('');
   const [password, setPassword] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    console.log(`${username} ${email} ${password} ${birthday}`);
     axios
       .post('https://nikairu-flix-app.herokuapp.com/users', {
         Username: username,
@@ -33,6 +35,15 @@ export function RegistrationView(props) {
       })
       .catch((e) => {
         console.log('error registering the user');
+        try {
+          setErrorMessage(e.response.data.errors[0].msg);
+        } catch (err) {
+          setErrorMessage(e.response.data);
+        }
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 3000);
       });
   };
 
@@ -42,6 +53,11 @@ export function RegistrationView(props) {
 
   return (
     <form className="registration-form">
+      <Fade in={showAlert}>
+        <div className="alert-container">
+          <Alert variant="danger">{errorMessage}</Alert>
+        </div>
+      </Fade>
       <BackButtonView cancel={cancelRegistration} />
       <Form.Group controlId="formBasicUsername">
         <Form.Label>Username</Form.Label>
