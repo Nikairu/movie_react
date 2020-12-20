@@ -1,17 +1,26 @@
 import React from 'react';
 import axios from 'axios';
 
+import { connect } from 'react-redux';
+
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
+import {
+  setMovies,
+  setUser,
+  setUserToken,
+  setFavoriteMovies,
+} from '../../actions/actions';
+
+import MoviesList from '../movies-list/movies-list';
+
+import { MovieView } from '../movie-view/movie-view';
 import { LoginView } from '../login-view/login-view';
 import { RegistrationView } from '../registration-view/registration-view';
-import { MovieCard } from '../movie-card/movie-card';
-import { MovieView } from '../movie-view/movie-view';
 import { DirectorView } from '../director-view/director-view';
 import { GenreView } from '../genre-view/genre-view';
 import { ProfileView } from '../profile-view/profile-view';
 import { NavView } from '../nav-view/nav-view';
-import { ProfileEditView } from '../profile-edit-view/profile-edit-view';
 
 import './main-view.scss';
 
@@ -23,6 +32,7 @@ export class MainView extends React.Component {
       movies: [],
       user: null,
       register: null,
+      favoriteMovies: [],
     };
   }
 
@@ -30,17 +40,16 @@ export class MainView extends React.Component {
     let accessToken = localStorage.getItem('token');
     let user = localStorage.getItem('user');
     if (accessToken !== null) {
-      this.setState({
+      /* this.setState({
         user: localStorage.getItem('user'),
-      });
+	  }); */
+      this.props.setUser(localStorage.getItem('user'));
       this.getUserData(accessToken, user);
     }
   }
 
   onLoggedIn = (authData) => {
-    this.setState({
-      user: authData.user.Username,
-    });
+    this.props.setUser(authData.user.Username);
     localStorage.setItem('token', authData.token);
     localStorage.setItem('user', authData.user.Username);
     this.getUserData(authData.token, authData.user.Username);
@@ -53,16 +62,12 @@ export class MainView extends React.Component {
       })
       .then((response) => {
         // Assign the result to the state
-        this.setState({
-          movies: response.data,
-        });
+        this.props.setMovies(response.data);
       })
       .catch(function (error) {
-        localStorage.clear();
-        this.setState({
-          user: null,
-        });
         console.log(error);
+        localStorage.clear();
+        this.props.setUser(null);
       });
   }
 
@@ -72,18 +77,15 @@ export class MainView extends React.Component {
         headers: { Authorization: `Bearer ${userToken}` },
       })
       .then((response) => {
+        this.getMovies(userToken);
         let userData = response.data[0];
-        this.setState({
-          user: userData.Username,
-          userToken: userToken,
-          favoriteMovies: userData.FavoriteMovies,
-          email: userData.Email,
-          birthday: userData.Birthday,
-        });
-        this.getMovies(this.state.userToken);
+        this.props.setUser(userData.Username);
+        this.props.setUserToken(userToken);
+        this.props.setFavoriteMovies(userData.FavoriteMovies);
+        this.props.setUser(userData.Username);
       })
       .catch((e) => {
-        this.setState({});
+        this.props.setUser(null);
         console.log(e);
         console.log('Error Authenticating');
         localStorage.clear();
@@ -91,12 +93,14 @@ export class MainView extends React.Component {
   }
 
   render() {
-    const { movies, user } = this.state;
-    // Before the movies have been loaded
-    if (!movies) return <div className="main-view" />;
+    let { movies, user } = this.props;
 
-    if (movies.length < 1 && localStorage.getItem('user'))
-      return <div className="main-view" />;
+    /* let { user } = this.state; */
+
+    // Before the movies have been loaded
+
+    /*     if (movies.length < 1 && localStorage.getItem('user'))
+      return <div className="main-view" />; */
 
     return (
       <Router>
@@ -117,8 +121,13 @@ export class MainView extends React.Component {
               );
 
             return (
-              <div className="main-view">
-                {movies.map((m) => (
+              <MoviesList
+                movies={movies}
+                user={user}
+                userToken={this.props.userToken}
+                favoriteMovies={this.props.favoriteMovies}
+              />
+              /* {movies.map((m) => (
                   <MovieCard
                     user={user}
                     userToken={this.state.userToken}
@@ -128,8 +137,7 @@ export class MainView extends React.Component {
                       this.state.favoriteMovies.includes(m._id) ? false : true
                     }
                   />
-                ))}
-              </div>
+                ))}  */
             );
           }}
         />
@@ -138,19 +146,21 @@ export class MainView extends React.Component {
 
         <Route
           path="/movies/:movieId"
-          render={({ match }) => (
-            <MovieView
-              movie={movies.find((m) => m._id === match.params.movieId)}
-              movieId={match.params.movieId}
-              user={user}
-              userToken={localStorage.getItem('token')}
-              addFavorite={
-                this.state.favoriteMovies.includes(match.params.movieId)
-                  ? false
-                  : true
-              }
-            />
-          )}
+          render={({ match }) =>
+            movies.length > 0 && (
+              <MovieView
+                movie={movies.find((m) => m._id === match.params.movieId)}
+                movieId={match.params.movieId}
+                user={user}
+                userToken={localStorage.getItem('token')}
+                addFavorite={
+                  this.props.favoriteMovies.includes(match.params.movieId)
+                    ? false
+                    : true
+                }
+              />
+            )
+          }
         />
 
         <Route
@@ -201,3 +211,19 @@ export class MainView extends React.Component {
     );
   }
 }
+
+let mapStateToProps = (state) => {
+  return {
+    movies: state.movies,
+    user: state.user,
+    userToken: state.userToken,
+    favoriteMovies: state.favoriteMovies,
+  };
+};
+
+export default connect(mapStateToProps, {
+  setMovies,
+  setUser,
+  setUserToken,
+  setFavoriteMovies,
+})(MainView);

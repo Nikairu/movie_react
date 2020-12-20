@@ -2,6 +2,7 @@ import React from 'react';
 import './nav-view.scss';
 import { Navbar, Nav, NavDropdown, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import VisibilityFilterInput from '../visibility-filter-input/visibility-filter-input';
 
 export class NavView extends React.Component {
   constructor() {
@@ -25,12 +26,7 @@ export class NavView extends React.Component {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="mr-auto">
             <Nav.Link href="#">Features</Nav.Link>
-            <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-              <NavDropdown.Item href="#">Genres</NavDropdown.Item>
-              <NavDropdown.Item href="#">Directors</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#">Soon...</NavDropdown.Item>
-            </NavDropdown>
+            <VisibilityFilterInput />
           </Nav>
           <Nav>
             <Link className="profile-button btn btn-primary" to={`/profile`}>

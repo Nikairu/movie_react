@@ -5,6 +5,10 @@ import axios from 'axios';
 import { Form, Button } from 'react-bootstrap';
 import Alert from 'react-bootstrap/Alert';
 
+import { connect } from 'react-redux';
+
+import { setUser } from '../../actions/actions';
+
 export function ProfileEditView(props) {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -13,14 +17,11 @@ export function ProfileEditView(props) {
   const [showAlert, setShowAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
 
-  const user = props.user;
-  const userToken = props.userToken;
-
   function applyChanges(e) {
     e.preventDefault();
     axios
       .put(
-        `https://nikairu-flix-app.herokuapp.com/users/${user}`,
+        `https://nikairu-flix-app.herokuapp.com/users/${props.user}`,
         {
           Username: username,
           Password: password,
@@ -28,10 +29,11 @@ export function ProfileEditView(props) {
           Birthday: birthday,
         },
         {
-          headers: { Authorization: `Bearer ${userToken}` },
+          headers: { Authorization: `Bearer ${props.userToken}` },
         }
       )
       .then((response) => {
+        setUser();
         console.log(response);
         window.open('/', '_self');
       })
@@ -107,3 +109,14 @@ export function ProfileEditView(props) {
     </form>
   );
 }
+
+let mapStateToProps = (state) => {
+  return {
+    user: state.user,
+    userToken: state.userToken,
+  };
+};
+
+export default connect(mapStateToProps, {
+  setUser,
+})(ProfileEditView);

@@ -7,29 +7,36 @@ import { Form, Button } from 'react-bootstrap';
 import { MovieCard } from '../movie-card/movie-card';
 import { ProfileEditView } from '../profile-edit-view/profile-edit-view';
 
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { setUser, setFavoriteMovies } from '../../actions/actions';
 
 export function ProfileView(props) {
   const [username, setUsername] = useState('');
+  /*   const [favoriteMovies, setFavoriteMovies] = useState([]);
+  const [password, setPassword] = useState(''); */
+
   const [email, setEmail] = useState('');
   const [birthday, setBirthday] = useState(new Date());
-  const [favoriteMovies, setFavoriteMovies] = useState([]);
-  const [password, setPassword] = useState('');
+
   const [edit, setEdit] = useState(false);
   const [show, setShow] = useState(false);
 
-  const user = props.user;
-  const userToken = props.userToken;
+  /*   const user = props.user;
+  const userToken = props.userToken; */
+
   if (username === '') {
     axios
-      .get(`https://nikairu-flix-app.herokuapp.com/user/${user}`, {
-        headers: { Authorization: `Bearer ${userToken}` },
+      .get(`https://nikairu-flix-app.herokuapp.com/user/${props.user}`, {
+        headers: { Authorization: `Bearer ${props.userToken}` },
       })
       .then((response) => {
+        console.log(response);
+        console.log(props);
         let userData = response.data[0];
         setUsername(userData.Username);
+        setUser(userData.Username);
         setEmail(userData.Email);
-
         setBirthday(new Date(userData.Birthday));
         setFavoriteMovies(userData.FavoriteMovies);
 
@@ -41,12 +48,14 @@ export function ProfileView(props) {
       });
   }
 
+  console.log(username);
+
   if (!username) return null;
 
   function deregister() {
     axios
-      .delete(`https://nikairu-flix-app.herokuapp.com/users/${user}`, {
-        headers: { Authorization: `Bearer ${userToken}` },
+      .delete(`https://nikairu-flix-app.herokuapp.com/users/${props.user}`, {
+        headers: { Authorization: `Bearer ${props.userToken}` },
       })
       .then((response) => {
         console.log(response);
@@ -59,11 +68,15 @@ export function ProfileView(props) {
       });
   }
 
-  let favorites = props.movies.filter((m) => favoriteMovies.includes(m._id));
+  console.log(props);
+
+  let favorites = props.movies.filter((m) =>
+    props.favoriteMovies.includes(m._id)
+  );
 
   const updateFavorites = (mov) => {
     setFavoriteMovies(
-      favoriteMovies.filter((fm) => {
+      props.favoriteMovies.filter((fm) => {
         return fm !== mov;
       })
     );
@@ -132,7 +145,7 @@ export function ProfileView(props) {
             Delete account
           </Button>
         </div>
-        {edit && <ProfileEditView user={username} userToken={userToken} />}
+        {edit && <ProfileEditView user={user} userToken={userToken} />}
       </div>
 
       <div className="label">Favorite Movies: </div>
@@ -151,3 +164,18 @@ export function ProfileView(props) {
     </div>
   );
 }
+
+let mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    movies: state.movies,
+    user: state.user,
+    userToken: state.userToken,
+    favoriteMovies: state.favoriteMovies,
+  };
+};
+
+export default connect(mapStateToProps, {
+  setUser,
+  setFavoriteMovies,
+})(ProfileView);
