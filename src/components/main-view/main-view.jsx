@@ -19,7 +19,7 @@ import { LoginView } from '../login-view/login-view';
 import { RegistrationView } from '../registration-view/registration-view';
 import { DirectorView } from '../director-view/director-view';
 import { GenreView } from '../genre-view/genre-view';
-import { ProfileView } from '../profile-view/profile-view';
+import ProfileView from '../profile-view/profile-view';
 import { NavView } from '../nav-view/nav-view';
 
 import './main-view.scss';
@@ -198,13 +198,7 @@ export class MainView extends React.Component {
         <Route
           path="/profile"
           render={() => {
-            return (
-              <ProfileView
-                user={user}
-                userToken={localStorage.getItem('token')}
-                movies={movies}
-              />
-            );
+            return <ProfileView />;
           }}
         />
       </Router>

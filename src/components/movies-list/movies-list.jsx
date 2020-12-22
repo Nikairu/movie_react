@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import './movies-list.scss';
 
-import { MovieCard } from '../movie-card/movie-card';
+import MovieCard from '../movie-card/movie-card';
 
 export function MoviesList(props) {
   const { movies, visibilityFilter } = props;

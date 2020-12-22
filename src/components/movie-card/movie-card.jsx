@@ -4,6 +4,10 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import axios from 'axios';
 
+import { connect } from 'react-redux';
+
+import { setFavoriteMovies } from '../../actions/actions';
+
 import { Link } from 'react-router-dom';
 
 import './movie-card.scss';
@@ -122,6 +126,19 @@ export class MovieCard extends React.Component {
     );
   }
 }
+
+let mapStateToProps = (state) => {
+  return {
+    movies: state.movies,
+    user: state.user,
+    userToken: state.userToken,
+    favoriteMovies: state.favoriteMovies,
+  };
+};
+
+export default connect(mapStateToProps, {
+  setFavoriteMovies,
+})(MovieCard);
 
 MovieCard.propTypes = {
   movie: PropTypes.shape({

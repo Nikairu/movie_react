@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { BackButtonView } from '../back-button-view/back-button-view';
 import './profile-view.scss';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
-import { Form, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { MovieCard } from '../movie-card/movie-card';
 import { ProfileEditView } from '../profile-edit-view/profile-edit-view';
 
@@ -13,8 +12,6 @@ import { setUser, setFavoriteMovies } from '../../actions/actions';
 
 export function ProfileView(props) {
   const [username, setUsername] = useState('');
-  /*   const [favoriteMovies, setFavoriteMovies] = useState([]);
-  const [password, setPassword] = useState(''); */
 
   const [email, setEmail] = useState('');
   const [birthday, setBirthday] = useState(new Date());
@@ -22,25 +19,23 @@ export function ProfileView(props) {
   const [edit, setEdit] = useState(false);
   const [show, setShow] = useState(false);
 
-  /*   const user = props.user;
-  const userToken = props.userToken; */
-
   if (username === '') {
     axios
       .get(`https://nikairu-flix-app.herokuapp.com/user/${props.user}`, {
         headers: { Authorization: `Bearer ${props.userToken}` },
       })
       .then((response) => {
-        console.log(response);
-        console.log(props);
+        console.log('thisloaded');
         let userData = response.data[0];
         setUsername(userData.Username);
         setUser(userData.Username);
         setEmail(userData.Email);
         setBirthday(new Date(userData.Birthday));
-        setFavoriteMovies(JSON.parse(JSON.stringify(userData.FavoriteMovies)));
-        console.log('userdata has been loaded');
-        console.log(userData);
+
+        setFavoriteMovies(userData.FavoriteMovies);
+
+        console.log(userData.FavoriteMovies);
+        console.log(props.favoriteMovies);
       })
       .catch((e) => {
         console.log(e);
@@ -48,9 +43,7 @@ export function ProfileView(props) {
       });
   }
 
-  console.log(username);
-
-  if (!username) return null;
+  if (username === '') return null;
 
   function deregister() {
     axios
@@ -68,13 +61,9 @@ export function ProfileView(props) {
       });
   }
 
-  console.log(props);
-
   let favorites = props.movies.filter(
     (m) => props.favoriteMovies && props.favoriteMovies.includes(m._id)
   );
-
-  console.log(favorites);
 
   const updateFavorites = (mov) => {
     setFavoriteMovies(
@@ -153,11 +142,12 @@ export function ProfileView(props) {
       </div>
 
       <div className="label">Favorite Movies: </div>
+
       <div className="favorite-movies">
         {favorites.map((m) => (
           <MovieCard
-            user={user}
-            userToken={userToken}
+            user={props.user}
+            userToken={props.userToken}
             key={m._id}
             movie={m}
             removeFavorite={true}
