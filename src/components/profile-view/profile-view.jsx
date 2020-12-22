@@ -38,8 +38,8 @@ export function ProfileView(props) {
         setUser(userData.Username);
         setEmail(userData.Email);
         setBirthday(new Date(userData.Birthday));
-        setFavoriteMovies(userData.FavoriteMovies);
-
+        setFavoriteMovies(JSON.parse(JSON.stringify(userData.FavoriteMovies)));
+        console.log('userdata has been loaded');
         console.log(userData);
       })
       .catch((e) => {
@@ -70,9 +70,11 @@ export function ProfileView(props) {
 
   console.log(props);
 
-  let favorites = props.movies.filter((m) =>
-    props.favoriteMovies.includes(m._id)
+  let favorites = props.movies.filter(
+    (m) => props.favoriteMovies && props.favoriteMovies.includes(m._id)
   );
+
+  console.log(favorites);
 
   const updateFavorites = (mov) => {
     setFavoriteMovies(
@@ -145,7 +147,9 @@ export function ProfileView(props) {
             Delete account
           </Button>
         </div>
-        {edit && <ProfileEditView user={user} userToken={userToken} />}
+        {edit && (
+          <ProfileEditView user={props.user} userToken={props.userToken} />
+        )}
       </div>
 
       <div className="label">Favorite Movies: </div>
