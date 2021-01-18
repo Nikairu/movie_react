@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 
 import { connect } from 'react-redux';
-
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import {
@@ -20,11 +19,11 @@ import { RegistrationView } from '../registration-view/registration-view';
 import { DirectorView } from '../director-view/director-view';
 import { GenreView } from '../genre-view/genre-view';
 import ProfileView from '../profile-view/profile-view';
-import { NavView } from '../nav-view/nav-view';
+import NavView from '../nav-view/nav-view';
 
 import './main-view.scss';
 
-export class MainView extends React.Component {
+class MainView extends React.Component {
   constructor() {
     super();
 
@@ -104,7 +103,7 @@ export class MainView extends React.Component {
 
     return (
       <Router>
-        <NavView user={user} />
+        <NavView />
         <Route
           exact
           path="/"
@@ -127,17 +126,6 @@ export class MainView extends React.Component {
                 userToken={this.props.userToken}
                 favoriteMovies={this.props.favoriteMovies}
               />
-              /* {movies.map((m) => (
-                  <MovieCard
-                    user={user}
-                    userToken={this.state.userToken}
-                    key={m._id}
-                    movie={m}
-                    addFavorite={
-                      this.state.favoriteMovies.includes(m._id) ? false : true
-                    }
-                  />
-                ))}  */
             );
           }}
         />

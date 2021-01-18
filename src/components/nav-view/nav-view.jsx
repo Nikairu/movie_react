@@ -3,8 +3,9 @@ import './nav-view.scss';
 import { Navbar, Nav, NavDropdown, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import VisibilityFilterInput from '../visibility-filter-input/visibility-filter-input';
+import { connect } from 'react-redux';
 
-export class NavView extends React.Component {
+class NavView extends React.Component {
   constructor() {
     super();
     this.state = {};
@@ -47,3 +48,11 @@ export class NavView extends React.Component {
     );
   }
 }
+
+let mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapStateToProps)(NavView);

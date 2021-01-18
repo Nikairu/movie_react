@@ -3,7 +3,7 @@ import './profile-view.scss';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import { Button } from 'react-bootstrap';
-import { MovieCard } from '../movie-card/movie-card';
+import MovieCard from '../movie-card/movie-card';
 import { ProfileEditView } from '../profile-edit-view/profile-edit-view';
 
 import { connect } from 'react-redux';
@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { setUser, setFavoriteMovies } from '../../actions/actions';
 
 export function ProfileView(props) {
+  console.log(props);
   const [username, setUsername] = useState('');
 
   const [email, setEmail] = useState('');
@@ -32,7 +33,7 @@ export function ProfileView(props) {
         setEmail(userData.Email);
         setBirthday(new Date(userData.Birthday));
 
-        setFavoriteMovies(userData.FavoriteMovies);
+        props.setFavoriteMovies(userData.FavoriteMovies);
 
         console.log(userData.FavoriteMovies);
         console.log(props.favoriteMovies);
