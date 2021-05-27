@@ -11,6 +11,10 @@ class NavView extends React.Component {
     this.state = {};
   }
 
+  /**
+   * Logs the user out
+   * @function logout
+   */
   logout = () => {
     localStorage.clear();
     window.open('/', '_self');
@@ -21,23 +25,23 @@ class NavView extends React.Component {
 
     if (!user) return null;
     return (
-      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-        <Navbar.Brand href="/">My-Flix</Navbar.Brand>
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="mr-auto">
-            <Nav.Link href="#">Features</Nav.Link>
+      <Navbar collapseOnSelect expand='lg' bg='dark' variant='dark'>
+        <Navbar.Brand href='/'>My-Flix</Navbar.Brand>
+        <Navbar.Toggle aria-controls='responsive-navbar-nav' />
+        <Navbar.Collapse id='responsive-navbar-nav'>
+          <Nav className='mr-auto'>
+            <Nav.Link href='#'>Features</Nav.Link>
             <VisibilityFilterInput />
           </Nav>
           <Nav>
-            <Link className="profile-button btn btn-primary" to={`/profile`}>
+            <Link className='profile-button btn btn-primary' to={`/profile`}>
               Profile
             </Link>
           </Nav>
           <Nav>
             <Button
-              className="logout-button"
-              variant="outline-danger"
+              className='logout-button'
+              variant='outline-danger'
               onClick={this.logout}
             >
               logout

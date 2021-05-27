@@ -47,6 +47,10 @@ class MainView extends React.Component {
     }
   }
 
+  /**
+   * Saves logged user credentials in localStorage
+   * @function onLoggedIn
+   */
   onLoggedIn = (authData) => {
     this.props.setUser(authData.user.Username);
     localStorage.setItem('token', authData.token);
@@ -54,6 +58,11 @@ class MainView extends React.Component {
     this.getUserData(authData.token, authData.user.Username);
   };
 
+  /**
+   * Loads movies from database
+   * @function getMovies
+   * @axios
+   */
   getMovies(token) {
     axios
       .get('https://nikairu-flix-app.herokuapp.com/movies', {
@@ -106,14 +115,14 @@ class MainView extends React.Component {
         <NavView />
         <Route
           exact
-          path="/"
+          path='/'
           render={() => {
             //no user logged in
             if (!user)
               return (
-                <div className="main-container">
+                <div className='main-container'>
                   <div>
-                    <h2 className="welcome-banner">Welcome to Myflix</h2>
+                    <h2 className='welcome-banner'>Welcome to Myflix</h2>
                   </div>
                   <LoginView onLoggedIn={this.onLoggedIn} />
                 </div>
@@ -130,10 +139,10 @@ class MainView extends React.Component {
           }}
         />
 
-        <Route path="/register" render={() => <RegistrationView />} />
+        <Route path='/register' render={() => <RegistrationView />} />
 
         <Route
-          path="/movies/:movieId"
+          path='/movies/:movieId'
           render={({ match }) =>
             movies.length > 0 && (
               <MovieView
@@ -152,7 +161,7 @@ class MainView extends React.Component {
         />
 
         <Route
-          path="/directors/:name"
+          path='/directors/:name'
           render={({ match }) => {
             return (
               <DirectorView
@@ -168,9 +177,9 @@ class MainView extends React.Component {
           }}
         />
         <Route
-          path="/genres/:name"
+          path='/genres/:name'
           render={({ match }) => {
-            if (!movies) return <div className="main-view" />;
+            if (!movies) return <div className='main-view' />;
             return (
               <GenreView
                 genre={
@@ -184,7 +193,7 @@ class MainView extends React.Component {
           }}
         />
         <Route
-          path="/profile"
+          path='/profile'
           render={() => {
             return <ProfileView />;
           }}

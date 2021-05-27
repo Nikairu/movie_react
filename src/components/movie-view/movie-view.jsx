@@ -25,6 +25,12 @@ export class MovieView extends React.Component {
       Favoritebutton: addFavorite,
     };
   }
+
+  /**
+   * Adds a movie to list of user´s favorites
+   * @function addFavorite
+   * @axios
+   */
   addFavorite = () => {
     this.setState({
       Favoritebutton: false,
@@ -50,29 +56,29 @@ export class MovieView extends React.Component {
     if (!movie) return null;
 
     return (
-      <div className="movie-view">
-        <img className="movie-poster" src={movie.ImagePath} />
-        <div className="movie-title">
-          <span className="label">Title: </span>
-          <span className="value">{movie.Title}</span>
+      <div className='movie-view'>
+        <img className='movie-poster' src={movie.ImagePath} />
+        <div className='movie-title'>
+          <span className='label'>Title: </span>
+          <span className='value'>{movie.Title}</span>
         </div>
-        <div className="movie-description">
-          <span className="label">Description: </span>
-          <span className="value">{movie.Description}</span>
+        <div className='movie-description'>
+          <span className='label'>Description: </span>
+          <span className='value'>{movie.Description}</span>
         </div>
         <Link to={`/directors/${movie.Director.Name}`}>
-          <Button variant="link">Director</Button>
+          <Button variant='link'>Director</Button>
         </Link>
 
         <Link to={`/genres/${movie.Genre.Name}`}>
-          <Button variant="link">Genre</Button>
+          <Button variant='link'>Genre</Button>
         </Link>
 
         {this.state.Favoritebutton && (
           <Button
-            className="favorite-button"
-            variant="primary"
-            type="submit"
+            className='favorite-button'
+            variant='primary'
+            type='submit'
             onClick={this.addFavorite}
           >
             Add to Favorites!

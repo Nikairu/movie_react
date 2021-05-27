@@ -17,6 +17,15 @@ export function ProfileEditView(props) {
   const [showAlert, setShowAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
 
+  /**
+   * Update user details
+   * @function applyChanges
+   * @axios
+   * @param {string} username
+   * @param {string} password
+   * @param {string} email
+   * @param {date} birthday
+   */
   function applyChanges(e) {
     e.preventDefault();
     axios
@@ -48,60 +57,60 @@ export function ProfileEditView(props) {
   }
 
   return (
-    <form className="profile-edit-form">
+    <form className='profile-edit-form'>
       <Fade in={showAlert}>
-        <div className="alert-container">
-          <Alert variant="danger">{errorMessage}</Alert>
+        <div className='alert-container'>
+          <Alert variant='danger'>{errorMessage}</Alert>
         </div>
       </Fade>
-      <Form.Group controlId="formBasicUsername">
+      <Form.Group controlId='formBasicUsername'>
         <Form.Label>New Username</Form.Label>
         <Form.Control
-          type="text"
-          placeholder="Enter username"
+          type='text'
+          placeholder='Enter username'
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-        <Form.Text className="text-muted">(min. length 5)</Form.Text>
+        <Form.Text className='text-muted'>(min. length 5)</Form.Text>
       </Form.Group>
 
-      <Form.Group controlId="formBasicEmail">
+      <Form.Group controlId='formBasicEmail'>
         <Form.Label>New Email</Form.Label>
         <Form.Control
-          type="email"
-          placeholder="Enter email"
+          type='email'
+          placeholder='Enter email'
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <Form.Text className="text-muted">
+        <Form.Text className='text-muted'>
           We'll never share your email with anyone else.
         </Form.Text>
       </Form.Group>
 
-      <Form.Group controlId="formBasicBirthday">
+      <Form.Group controlId='formBasicBirthday'>
         <Form.Label>Birthday</Form.Label>
         <Form.Control
-          type="text"
-          placeholder="MM/DD/YYYY"
+          type='text'
+          placeholder='MM/DD/YYYY'
           value={birthday}
           onChange={(e) => setBirthday(e.target.value)}
         />
       </Form.Group>
 
-      <Form.Group controlId="formBasicPassword">
+      <Form.Group controlId='formBasicPassword'>
         <Form.Label>New Password</Form.Label>
         <Form.Control
-          type="password"
-          placeholder="Password"
+          type='password'
+          placeholder='Password'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
       </Form.Group>
 
       <Button
-        className="login-button"
-        variant="primary"
-        type="submit"
+        className='login-button'
+        variant='primary'
+        type='submit'
         onClick={applyChanges}
       >
         Apply

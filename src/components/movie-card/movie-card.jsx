@@ -35,6 +35,11 @@ class MovieCard extends React.Component {
     };
   }
 
+  /**
+   * Adds a movie to list of user´s favorites
+   * @function addFavorite
+   * @axios
+   */
   addFavorite = () => {
     this.setState({
       addFavorite: false,
@@ -54,6 +59,11 @@ class MovieCard extends React.Component {
       });
   };
 
+  /**
+   * Remove movie from user's list of favorites
+   * @function removeFavorite
+   * @axios
+   */
   removeFavorite = () => {
     this.props.updateFavorites(this.state.movie._id);
     this.setState({
@@ -80,28 +90,28 @@ class MovieCard extends React.Component {
 
     return (
       <Card>
-        <Card.Img variant="top" src={movie.ImagePath} />
-        <Card.Body className="bg-dark">
-          <table className="main_div">
+        <Card.Img variant='top' src={movie.ImagePath} />
+        <Card.Body className='bg-dark'>
+          <table className='main_div'>
             <tbody>
               <tr>
-                <td valign="top">
+                <td valign='top'>
                   <Card.Title>{movie.Title}</Card.Title>
                   <Card.Text>{movie.Description}</Card.Text>
                 </td>
               </tr>
-              <tr valign="bottom" className="button-wrapper">
+              <tr valign='bottom' className='button-wrapper'>
                 <td>
                   <Link to={`/movies/${movie._id}`}>
-                    <Button className="more-button" variant="primary">
+                    <Button className='more-button' variant='primary'>
                       More
                     </Button>
                   </Link>
                   {this.state.addFavorite && (
                     <Button
-                      className="favorite-button"
-                      variant="secondary"
-                      type="submit"
+                      className='favorite-button'
+                      variant='secondary'
+                      type='submit'
                       onClick={this.addFavorite}
                     >
                       Add Favorite
@@ -109,9 +119,9 @@ class MovieCard extends React.Component {
                   )}
                   {this.state.removeFavorite && (
                     <Button
-                      className="remove-button"
-                      variant="secondary"
-                      type="submit"
+                      className='remove-button'
+                      variant='secondary'
+                      type='submit'
                       onClick={this.removeFavorite}
                     >
                       Remove Favorite

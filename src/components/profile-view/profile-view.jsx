@@ -46,6 +46,11 @@ export function ProfileView(props) {
 
   if (username === '') return null;
 
+  /**
+   * Deletes the current user from the database
+   * @function handleDelete
+   * @axios
+   */
   function deregister() {
     axios
       .delete(`https://nikairu-flix-app.herokuapp.com/users/${props.user}`, {
@@ -82,21 +87,21 @@ export function ProfileView(props) {
   const handleShow = () => setShow(true);
 
   return (
-    <div className="user-view">
+    <div className='user-view'>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title className="text-light">Accept Changes</Modal.Title>
+          <Modal.Title className='text-light'>Accept Changes</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="text-light">
+        <Modal.Body className='text-light'>
           Are you sure you want to delete your user data?
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="danger" onClick={deregister}>
+          <Button variant='danger' onClick={deregister}>
             Accept changes
           </Button>
           <Button
-            className="text-light"
-            variant="secondary"
+            className='text-light'
+            variant='secondary'
             onClick={handleClose}
           >
             Close
@@ -104,19 +109,19 @@ export function ProfileView(props) {
         </Modal.Footer>
       </Modal>
 
-      <div className="user-data-container">
-        <div className="current-data">
-          <div className="user-name">
-            <span className="lable">Username: </span>
-            <span className="value">{username}</span>
+      <div className='user-data-container'>
+        <div className='current-data'>
+          <div className='user-name'>
+            <span className='lable'>Username: </span>
+            <span className='value'>{username}</span>
           </div>
-          <div className="user-email">
-            <span className="label">Email: </span>
-            <span className="value">{email}</span>
+          <div className='user-email'>
+            <span className='label'>Email: </span>
+            <span className='value'>{email}</span>
           </div>
-          <div className="user-birthday">
-            <span className="label">Birthday: </span>
-            <span className="value">
+          <div className='user-birthday'>
+            <span className='label'>Birthday: </span>
+            <span className='value'>
               {birthday.getDate() +
                 '/' +
                 birthday.getMonth() +
@@ -124,14 +129,14 @@ export function ProfileView(props) {
                 birthday.getFullYear()}
             </span>
           </div>
-          <Button className="edit-button" variant="primary" onClick={editUser}>
+          <Button className='edit-button' variant='primary' onClick={editUser}>
             Edit
           </Button>
 
           <Button
-            className="deregister-button"
-            variant="secondary"
-            type="submit"
+            className='deregister-button'
+            variant='secondary'
+            type='submit'
             onClick={handleShow}
           >
             Delete account
@@ -142,9 +147,9 @@ export function ProfileView(props) {
         )}
       </div>
 
-      <div className="label">Favorite Movies: </div>
+      <div className='label'>Favorite Movies: </div>
 
-      <div className="favorite-movies">
+      <div className='favorite-movies'>
         {favorites.map((m) => (
           <MovieCard
             user={props.user}

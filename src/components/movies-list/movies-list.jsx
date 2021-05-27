@@ -5,6 +5,10 @@ import './movies-list.scss';
 
 import MovieCard from '../movie-card/movie-card';
 
+/**
+ * Allows users to filter the list of movies
+ * @function MoviesList
+ */
 function MoviesList(props) {
   const { movies, visibilityFilter } = props;
 
@@ -16,10 +20,10 @@ function MoviesList(props) {
     );
   }
 
-  if (!movies) return <div className="main-view" />;
+  if (!movies) return <div className='main-view' />;
 
   return (
-    <div className="main-view">
+    <div className='main-view'>
       {filteredMovies.map((m) => (
         <MovieCard
           user={props.user}
