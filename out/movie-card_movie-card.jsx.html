@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: movie-card/movie-card.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: movie-card/movie-card.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import PropTypes from 'prop-types';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import axios from 'axios';
+
+import { connect } from 'react-redux';
+
+import { setFavoriteMovies } from '../../actions/actions';
+
+import { Link } from 'react-router-dom';
+
+import './movie-card.scss';
+
+class MovieCard extends React.Component {
+  constructor(props) {
+    super(props);
+
+    let addFavorite = false;
+    if (props.addFavorite) {
+      addFavorite = true;
+    }
+
+    let removeFavorite = false;
+    if (props.removeFavorite) {
+      removeFavorite = true;
+    }
+
+    this.state = {
+      movie: this.props.movie,
+      username: props.user,
+      userToken: props.userToken,
+      addFavorite: addFavorite,
+      removeFavorite: removeFavorite,
+    };
+  }
+
+  /**
+   * Adds a movie to list of user´s favorites
+   * @function addFavorite
+   * @axios
+   */
+  addFavorite = () => {
+    this.setState({
+      addFavorite: false,
+    });
+    axios({
+      method: 'post',
+      url: `https://nikairu-flix-app.herokuapp.com/users/${this.state.username}/Movies/${this.state.movie._id}`,
+      headers: { Authorization: `Bearer ${this.state.userToken}` },
+      data: {},
+    })
+      .then((response) => {
+        console.log('movie added');
+      })
+      .catch((e) => {
+        console.log(e);
+        console.log('movie not added');
+      });
+  };
+
+  /**
+   * Remove movie from user's list of favorites
+   * @function removeFavorite
+   * @axios
+   */
+  removeFavorite = () => {
+    this.props.updateFavorites(this.state.movie._id);
+    this.setState({
+      removeFavorite: false,
+    });
+    axios
+      .delete(
+        `https://nikairu-flix-app.herokuapp.com/users/${this.state.username}/Movies/${this.state.movie._id}`,
+        {
+          headers: { Authorization: `Bearer ${this.state.userToken}` },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((e) => {
+        console.log(e);
+        console.log('could not remove favorite');
+      });
+  };
+
+  render() {
+    const { movie } = this.props;
+
+    return (
+      &lt;Card>
+        &lt;Card.Img variant='top' src={movie.ImagePath} />
+        &lt;Card.Body className='bg-dark'>
+          &lt;table className='main_div'>
+            &lt;tbody>
+              &lt;tr>
+                &lt;td valign='top'>
+                  &lt;Card.Title>{movie.Title}&lt;/Card.Title>
+                  &lt;Card.Text>{movie.Description}&lt;/Card.Text>
+                &lt;/td>
+              &lt;/tr>
+              &lt;tr valign='bottom' className='button-wrapper'>
+                &lt;td>
+                  &lt;Link to={`/movies/${movie._id}`}>
+                    &lt;Button className='more-button' variant='primary'>
+                      More
+                    &lt;/Button>
+                  &lt;/Link>
+                  {this.state.addFavorite &amp;&amp; (
+                    &lt;Button
+                      className='favorite-button'
+                      variant='secondary'
+                      type='submit'
+                      onClick={this.addFavorite}
+                    >
+                      Add Favorite
+                    &lt;/Button>
+                  )}
+                  {this.state.removeFavorite &amp;&amp; (
+                    &lt;Button
+                      className='remove-button'
+                      variant='secondary'
+                      type='submit'
+                      onClick={this.removeFavorite}
+                    >
+                      Remove Favorite
+                    &lt;/Button>
+                  )}
+                &lt;/td>
+              &lt;/tr>
+            &lt;/tbody>
+          &lt;/table>
+        &lt;/Card.Body>
+      &lt;/Card>
+    );
+  }
+}
+
+let mapStateToProps = (state) => {
+  return {
+    movies: state.movies,
+    user: state.user,
+    userToken: state.userToken,
+    favoriteMovies: state.favoriteMovies,
+  };
+};
+
+export default connect(mapStateToProps, {
+  setFavoriteMovies,
+})(MovieCard);
+
+MovieCard.propTypes = {
+  movie: PropTypes.shape({
+    Title: PropTypes.string.isRequired,
+    Description: PropTypes.string.isRequired,
+    Genre: PropTypes.shape({
+      Name: PropTypes.string.isRequired,
+    }).isRequired,
+    Director: PropTypes.shape({
+      Name: PropTypes.string.isRequired,
+    }).isRequired,
+    ImagePath: PropTypes.string.isRequired,
+  }).isRequired,
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addFavorite">addFavorite</a></li><li><a href="global.html#applyChanges">applyChanges</a></li><li><a href="global.html#getMovies">getMovies</a></li><li><a href="global.html#handleDelete">handleDelete</a></li><li><a href="global.html#handleSubmit">handleSubmit</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#MoviesList">MoviesList</a></li><li><a href="global.html#onLoggedIn">onLoggedIn</a></li><li><a href="global.html#removeFavorite">removeFavorite</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu May 27 2021 13:30:00 GMT+0100 (Western European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

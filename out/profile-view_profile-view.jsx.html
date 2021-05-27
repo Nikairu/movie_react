@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: profile-view/profile-view.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: profile-view/profile-view.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from 'react';
+import './profile-view.scss';
+import axios from 'axios';
+import Modal from 'react-bootstrap/Modal';
+import { Button } from 'react-bootstrap';
+import MovieCard from '../movie-card/movie-card';
+import { ProfileEditView } from '../profile-edit-view/profile-edit-view';
+
+import { connect } from 'react-redux';
+
+import { setUser, setFavoriteMovies } from '../../actions/actions';
+
+export function ProfileView(props) {
+  console.log(props);
+  const [username, setUsername] = useState('');
+
+  const [email, setEmail] = useState('');
+  const [birthday, setBirthday] = useState(new Date());
+
+  const [edit, setEdit] = useState(false);
+  const [show, setShow] = useState(false);
+
+  if (username === '') {
+    axios
+      .get(`https://nikairu-flix-app.herokuapp.com/user/${props.user}`, {
+        headers: { Authorization: `Bearer ${props.userToken}` },
+      })
+      .then((response) => {
+        console.log('thisloaded');
+        let userData = response.data[0];
+        setUsername(userData.Username);
+        setUser(userData.Username);
+        setEmail(userData.Email);
+        setBirthday(new Date(userData.Birthday));
+
+        props.setFavoriteMovies(userData.FavoriteMovies);
+
+        console.log(userData.FavoriteMovies);
+        console.log(props.favoriteMovies);
+      })
+      .catch((e) => {
+        console.log(e);
+        console.log('no such user');
+      });
+  }
+
+  if (username === '') return null;
+
+  /**
+   * Deletes the current user from the database
+   * @function handleDelete
+   * @axios
+   */
+  function deregister() {
+    axios
+      .delete(`https://nikairu-flix-app.herokuapp.com/users/${props.user}`, {
+        headers: { Authorization: `Bearer ${props.userToken}` },
+      })
+      .then((response) => {
+        console.log(response);
+        localStorage.clear();
+        window.open('/', '_self');
+      })
+      .catch((e) => {
+        console.log(e);
+        console.log('no such user');
+      });
+  }
+
+  let favorites = props.movies.filter(
+    (m) => props.favoriteMovies &amp;&amp; props.favoriteMovies.includes(m._id)
+  );
+
+  const updateFavorites = (mov) => {
+    setFavoriteMovies(
+      props.favoriteMovies.filter((fm) => {
+        return fm !== mov;
+      })
+    );
+  };
+
+  const editUser = () => {
+    setEdit(!edit);
+  };
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  return (
+    &lt;div className='user-view'>
+      &lt;Modal show={show} onHide={handleClose}>
+        &lt;Modal.Header closeButton>
+          &lt;Modal.Title className='text-light'>Accept Changes&lt;/Modal.Title>
+        &lt;/Modal.Header>
+        &lt;Modal.Body className='text-light'>
+          Are you sure you want to delete your user data?
+        &lt;/Modal.Body>
+        &lt;Modal.Footer>
+          &lt;Button variant='danger' onClick={deregister}>
+            Accept changes
+          &lt;/Button>
+          &lt;Button
+            className='text-light'
+            variant='secondary'
+            onClick={handleClose}
+          >
+            Close
+          &lt;/Button>
+        &lt;/Modal.Footer>
+      &lt;/Modal>
+
+      &lt;div className='user-data-container'>
+        &lt;div className='current-data'>
+          &lt;div className='user-name'>
+            &lt;span className='lable'>Username: &lt;/span>
+            &lt;span className='value'>{username}&lt;/span>
+          &lt;/div>
+          &lt;div className='user-email'>
+            &lt;span className='label'>Email: &lt;/span>
+            &lt;span className='value'>{email}&lt;/span>
+          &lt;/div>
+          &lt;div className='user-birthday'>
+            &lt;span className='label'>Birthday: &lt;/span>
+            &lt;span className='value'>
+              {birthday.getDate() +
+                '/' +
+                birthday.getMonth() +
+                '/' +
+                birthday.getFullYear()}
+            &lt;/span>
+          &lt;/div>
+          &lt;Button className='edit-button' variant='primary' onClick={editUser}>
+            Edit
+          &lt;/Button>
+
+          &lt;Button
+            className='deregister-button'
+            variant='secondary'
+            type='submit'
+            onClick={handleShow}
+          >
+            Delete account
+          &lt;/Button>
+        &lt;/div>
+        {edit &amp;&amp; (
+          &lt;ProfileEditView user={props.user} userToken={props.userToken} />
+        )}
+      &lt;/div>
+
+      &lt;div className='label'>Favorite Movies: &lt;/div>
+
+      &lt;div className='favorite-movies'>
+        {favorites.map((m) => (
+          &lt;MovieCard
+            user={props.user}
+            userToken={props.userToken}
+            key={m._id}
+            movie={m}
+            removeFavorite={true}
+            updateFavorites={updateFavorites}
+          />
+        ))}
+      &lt;/div>
+    &lt;/div>
+  );
+}
+
+let mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    movies: state.movies,
+    user: state.user,
+    userToken: state.userToken,
+    favoriteMovies: state.favoriteMovies,
+  };
+};
+
+export default connect(mapStateToProps, {
+  setUser,
+  setFavoriteMovies,
+})(ProfileView);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addFavorite">addFavorite</a></li><li><a href="global.html#applyChanges">applyChanges</a></li><li><a href="global.html#getMovies">getMovies</a></li><li><a href="global.html#handleDelete">handleDelete</a></li><li><a href="global.html#handleSubmit">handleSubmit</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#MoviesList">MoviesList</a></li><li><a href="global.html#onLoggedIn">onLoggedIn</a></li><li><a href="global.html#removeFavorite">removeFavorite</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu May 27 2021 13:30:00 GMT+0100 (Western European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
